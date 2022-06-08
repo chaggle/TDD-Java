@@ -9,10 +9,6 @@ public class ArgsTest {
     // -l -p 8080 -d /usr/logs
 
     // 小步迭代，single Option, Multi Option
-    // TODO Default:
-    // TODO       - Bool: false
-    // TODO       - Integer: 0
-    // TODO       - String: ""
     // Single Option:
     // - Bool: -l
     @Test
@@ -53,7 +49,7 @@ public class ArgsTest {
     static record StringOption(@Option("d") String directory) {}
 
 
-    // TODO Multi Option: -l -p 8080 -d /usr/logs
+    // Multi Option: -l -p 8080 -d /usr/logs
     @Test
     public void should_parse_multi_options() {
         Options options = Args.parse(Options.class, "-l", "-p", "8080", "-d", "/usr/logs");
@@ -66,10 +62,31 @@ public class ArgsTest {
     static record Options(@Option("l") boolean logging, @Option("p") int port,@Option("d") String directory) {}
 
     // 以下为 sad path 的情况 
-    // TODO Sad path:
-    // TODO       - Bool: -l t / -l t f
+    // Sad path:
+    // TODO - Bool: -l t / -l t f
+    // Default:
+    // TODO - Bool: false
+    @Test
+    public void should_not_accept_extra_argument_for_boolean_option() {
+        TooManyArgumentsException e = assertThrows(TooManyArgumentsException.class,
+                () -> Args.parse(BooleanOption.class, "-l", "t"));
+        assertEquals("l", e.getOption());
+    }
+
+    @Test
+    public void should_not_accept_extra_argument_for_boolean_option() {
+        TooManyArgumentsException e = assertThrows(TooManyArgumentsException.class, () ->
+                new BooleanOptionParser().parse("-l", "t", option("l")));
+        assertEquals("l", e.getOption());
+    }
+
+    // Sad path:
     // TODO       - Integer: -p / / -p 8080 8081
     // TODO       - String: -d /  / -d /usr/logs /usr/vars
+    // Default:
+    // TODO       - Integer: 0
+    // TODO       - String: ""
+
 
     // 两个大步子，不适合作为小步迭代的方式。
 
