@@ -57,6 +57,7 @@ public class ArgsTest {
     @Test
     public void should_parse_multi_options() {
         Options options = Args.parse(Options.class, "-l", "-p", "8080", "-d", "/usr/logs");
+
         assertTrue(options.logging());
         assertEquals(8080, options.port());
         assertEquals("/usr/logs", options.directory());
