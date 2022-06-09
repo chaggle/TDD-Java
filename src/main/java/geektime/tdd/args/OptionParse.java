@@ -2,6 +2,6 @@ package geektime.tdd.args;
 
 import java.util.List;
 
-interface OptionParse {
-    Object parse(List<String> arguments, Option option);
+interface OptionParse<T> {
+    T parse(List<String> arguments, Option option);
 }
