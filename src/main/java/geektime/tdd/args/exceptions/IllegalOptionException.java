@@ -1,10 +1,12 @@
-package geektime.tdd.args;
+package geektime.tdd.args.exceptions;
 
+/**
+ * @author chaggle
+ */
 public class IllegalOptionException extends RuntimeException {
     private final String parameter;
 
     public IllegalOptionException(String option) {
-        super(option);
         this.parameter = option;
     }
 
