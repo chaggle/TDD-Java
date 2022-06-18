@@ -22,7 +22,6 @@ class OptionParsers {
                 values(arguments, option, 1).map(it -> parseValue(option, it.get(0), valueParser)).orElse(defaultValue);
     }
 
-
     public static <T> OptionParser<T[]> list(IntFunction<T[]> generator, Function<String, T> valueParser) {
         return (arguments, option) -> values(arguments, option)
                 .map(it -> it.stream().map(value -> parseValue(option, value, valueParser))
@@ -34,23 +33,18 @@ class OptionParsers {
         return Optional.ofNullable(index == -1 ? null : values(arguments, index));
     }
 
-
     private static Optional<List<String>> values(List<String> arguments, Option option, int expectedSize) {
-        int index = arguments.indexOf("-" + option.value());
-        if (index == -1) {
-            return Optional.empty();
-        }
+        return values(arguments, option).map(it -> checkSize(option, expectedSize, it));
+    }
 
-        List<String> values = values(arguments, index);
-
+    private static List<String> checkSize(Option option, int expectedSize, List<String> values) {
         if (values.size() < expectedSize) {
             throw new InsufficientArgumentsException(option.value());
         }
         if (values.size() > expectedSize) {
             throw new TooManyArgumentsException(option.value());
         }
-
-        return Optional.of(values);
+        return values;
     }
 
     private static <T> T parseValue(Option option, String value, Function<String, T> valueParser) {
